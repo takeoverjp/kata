@@ -1,18 +1,13 @@
+def is_dividable(dividee, divider)
+    dividee % divider == 0
+end
 
 def is_fizz(num)
-    if num % 3 == 0
-        return true
-    else
-	return false
-    end
+    is_dividable(num, 3)
 end
 
 def is_buzz(num)
-    if num % 5 == 0
-        return true
-    else
-	return false
-    end
+    is_dividable(num, 5)
 end
 
 for i in 1..100
