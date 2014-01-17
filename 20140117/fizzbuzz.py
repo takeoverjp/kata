@@ -8,14 +8,15 @@ def is_buzz(num):
     return is_dividable(num, 5)
 
 def fizzbuzz(num):
-    if (is_fizz(i) and is_buzz(i)):
+    if (is_fizz(num) and is_buzz(num)):
         return "FizzBuzz"
-    elif (is_fizz(i)):
+    elif (is_fizz(num)):
         return "Fizz"
-    elif (is_buzz(i)):
+    elif (is_buzz(num)):
         return "Buzz"
     else:
-        return i
+        return num
 
-for i in range(1, 101):
-    print fizzbuzz(i)
+if __name__ == '__main__':
+    for i in range(1, 101):
+        print fizzbuzz(i)
