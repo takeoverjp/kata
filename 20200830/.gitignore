@@ -1,1 +1,5 @@
 /args
+/func
+/func.lambda
+/*.sym
+/*.asm
