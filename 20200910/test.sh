@@ -19,14 +19,21 @@ test_gzip() {
     local CORE=$1
     setup
 
+    SEC=$(date +%s)
     cat ${CORE} |
-        ./core_pipe -v ${OUTPUT_DIR} $(date +%s) exec_name > out/log
+        ./core_pipe -v ${OUTPUT_DIR} ${SEC} exec_name > out/log
 
-    # TODO: file name check with date format
-    gunzip ${OUTPUT_DIR}/core_*.gz
-    diff ${CORE} ${OUTPUT_DIR}/core_*
+    DATE=$(date --utc --date="@${SEC}" +%Y%m%d_%H%M%S)
+    EXP_CORE_NAME="core_000_${DATE}_exec_name.gz"
+    if [ ! -f ${OUTPUT_DIR}/${EXP_CORE_NAME} ]; then
+        echo "Error $0 $1: ${EXP_CORE_NAME} not found"
+        cat out/log
+        exit 1
+    fi
+    gunzip ${OUTPUT_DIR}/${EXP_CORE_NAME}
+    diff ${CORE} ${OUTPUT_DIR}/${EXP_CORE_NAME%.*}
     if [ $? -ne 0 ]; then
-        echo "Error $0 $1: CORE=${CORE}"
+        echo "Error $0 $1: ${CORE} and ${EXP_CORE_NAME%.*} differ"
         cat out/log
         exit 1
     fi
