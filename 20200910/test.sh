@@ -55,8 +55,10 @@ test_max_num() {
         exit 1
     fi
     LAST_CORE_NAME=$(find out/ -name 'core_*' | sort | tail -1 | xargs basename)
-    if [[ "${LAST_CORE_NAME}" != "core_011_${SEC}_exec_name.gz" ]]; then
-        echo "Error $0 $1 $2: LAST_CORE_NAME=${LAST_CORE_NAME}"
+    DATE=$(date --utc --date="@${SEC}" +%Y%m%d_%H%M%S)
+    EXP_CORE_NAME="core_011_${DATE}_exec_name.gz"
+    if [[ "${LAST_CORE_NAME}" != "${EXP_CORE_NAME}" ]]; then
+        echo "Error $0 $1 $2: LAST_CORE_NAME=${LAST_CORE_NAME} EXP_CORE_NAME=${EXP_CORE_NAME}"
         cat out/log
         exit 1
     fi
@@ -76,15 +78,17 @@ prepare_testdata() {
 
 
 prepare_testdata
+
 for BS in 1K 10K 100K 1M 10M; do
     TESTDATA=testdata/core_${BS}
     test_gzip ${TESTDATA}
-    for MAX_NUM in 1 5 7 9 10 11 13 15 19; do
-        test_max_num ${TESTDATA} ${MAX_NUM}
-    done
-
-    # TODO: test_max_size ${TESTDATA} ${MAX_SIZE}
 done
+
+for MAX_NUM in 1 5 7 9 10 11 13 15 19; do
+    test_max_num testdata/core_1M ${MAX_NUM}
+done
+
+# TODO: test_max_size ${TESTDATA} ${MAX_SIZE}
 
 echo
 echo "OK"

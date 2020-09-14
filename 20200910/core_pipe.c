@@ -218,14 +218,27 @@ main (int argc, char *argv[])
     show_usage_and_exit ();
 
   const char* const output_dir = argv[optind];
-  const long long sec = strtoll (argv[optind+1], NULL, 10);
+  const time_t sec = strtoll (argv[optind+1], NULL, 10);
   const char* const executable = argv[optind+2];
+
+  struct tm time;
+  memset (&time, 0x0, sizeof(time));
+  gmtime_r (&sec, &time);
 
   const int core_index = remove_old_cores (max_num);
 
   char core_name[PATH_MAX];
-  snprintf (core_name, sizeof(core_name), "%s/core_%03d_%010lld_%s.gz",
-            output_dir, core_index, sec, executable);
+  snprintf (core_name, sizeof(core_name),
+            "%s/core_%03d_%04d%02d%02d_%02d%02d%02d_%s.gz",
+            output_dir,
+            core_index,
+            time.tm_year + 1900,
+            time.tm_mon + 1,
+            time.tm_mday,
+            time.tm_hour,
+            time.tm_min,
+            time.tm_sec,
+            executable);
   FILE* const dest = fopen (core_name, "wb");
   if (!dest)
     {
