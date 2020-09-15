@@ -96,6 +96,9 @@ for MAX_NUM in 1 5 7 9 10 11 13 15 19; do
 done
 
 # TODO: test_max_size ${TESTDATA} ${MAX_SIZE}
+# TODO: lock
+# TODO: ignore signal
+# TODO: memory limitation to avoid thrasing
 
 echo
 echo "OK"
